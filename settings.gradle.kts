@@ -2,6 +2,7 @@ rootProject.name = "board"
 
 include(
     "common",
+    "common:snowflake",
     "service",
     "service:article",
     "service:comment",
