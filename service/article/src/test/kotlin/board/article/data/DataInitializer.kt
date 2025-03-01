@@ -49,6 +49,11 @@ class DataInitializer {
                     writerId = 1L
                 )
                 entityManager.persist(article)
+
+                if (i % BATCH_SIZE == 0) {
+                    entityManager.flush()
+                    entityManager.clear()
+                }
             }
         }
     }
@@ -56,5 +61,6 @@ class DataInitializer {
     companion object {
         private const val EXECUTE_COUNT: Int = 6000
         private const val BULK_INSERT_SIZE: Int = 2000
+        private const val BATCH_SIZE = 100
     }
 }
