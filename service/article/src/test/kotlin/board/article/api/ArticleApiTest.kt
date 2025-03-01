@@ -2,6 +2,7 @@ package board.article.api
 
 import board.article.service.request.ArticleCreateRequest
 import board.article.service.request.ArticleUpdateRequest
+import board.article.service.response.ArticlePageResponse
 import board.article.service.response.ArticleResponse
 import org.junit.jupiter.api.Test
 import org.springframework.web.client.RestClient
@@ -62,5 +63,18 @@ class ArticleApiTest {
         restClient.delete()
             .uri("/v1/articles/{articleId}", 153768678928158720)
             .retrieve()
+    }
+
+    @Test
+    fun readAllTest() {
+        val articlePageResponse = restClient.get()
+            .uri("/v1/articles?boardId=1&page=30&pageSize=1")
+            .retrieve()
+            .body(ArticlePageResponse::class.java)
+
+        println(articlePageResponse?.articleCount)
+        articlePageResponse?.articles?.forEach {
+//            println("article: $it")
+        }
     }
 }
