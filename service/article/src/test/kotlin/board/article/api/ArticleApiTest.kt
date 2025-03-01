@@ -5,6 +5,7 @@ import board.article.service.request.ArticleUpdateRequest
 import board.article.service.response.ArticlePageResponse
 import board.article.service.response.ArticleResponse
 import org.junit.jupiter.api.Test
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.web.client.RestClient
 
 class ArticleApiTest {
@@ -75,6 +76,32 @@ class ArticleApiTest {
         println(articlePageResponse?.articleCount)
         articlePageResponse?.articles?.forEach {
 //            println("article: $it")
+        }
+    }
+
+    @Test
+    fun readAllInfiniteScrollTest() {
+        val articles01: List<ArticleResponse>? = restClient.get()
+            .uri("/v1/articles/infinite-scroll?boardId=1&pageSize=5")
+            .retrieve()
+            .body(object : ParameterizedTypeReference<List<ArticleResponse>>() {})
+
+        println("first page")
+
+        articles01?.forEach {
+            println("article id: ${it.articleId}")
+        }
+
+        val lastArticleId = articles01?.last()?.articleId
+        val articles02: List<ArticleResponse>? = restClient.get()
+            .uri("/v1/articles/infinite-scroll?boardId=1&pageSize=5&lastsArticleId=$lastArticleId")
+            .retrieve()
+            .body(object : ParameterizedTypeReference<List<ArticleResponse>>() {})
+
+        println("second page")
+        articles02?.forEach {
+            println("article id: ${it.articleId}")
+
         }
     }
 }

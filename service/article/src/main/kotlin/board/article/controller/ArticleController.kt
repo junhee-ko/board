@@ -24,6 +24,14 @@ class ArticleController(
     ): ArticlePageResponse =
         articleService.readAll(boardId, page, pageSize)
 
+    @GetMapping("/v1/articles/infinite-scroll")
+    fun readAllInfiniteScroll(
+        @RequestParam("boardId") boardId: Long,
+        @RequestParam("pageSize") pageSize: Long,
+        @RequestParam("lastArticleId", required = false) lastArticleId: Long?,
+    ): List<ArticleResponse> =
+        articleService.readAllInfiniteScroll(boardId, pageSize, lastArticleId)
+
     @PostMapping("/v1/articles")
     fun create(@RequestBody article: ArticleCreateRequest): ArticleResponse =
         articleService.create(article)
